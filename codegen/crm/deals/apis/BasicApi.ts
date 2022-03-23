@@ -124,7 +124,7 @@ export class BasicApiRequestFactory extends BaseAPIRequestFactory {
      * @param archived Whether to return only results that have been archived.
      * @param idProperty The name of a property whose values are unique for this object type
      */
-    public async getById(dealId: string, properties?: Array<string>, associations?: Array<string>, archived?: boolean, idProperty?: string, _options?: Configuration): Promise<RequestContext> {
+    public async getById(dealId: string, properties?: Array<string>, associations?: Array<string>, archived?: boolean, idProperty?: string, _options?: Configuration, propertiesWithHistory?: Array<string>): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'dealId' is not null or undefined
@@ -156,6 +156,11 @@ export class BasicApiRequestFactory extends BaseAPIRequestFactory {
         }
 
         // Query Params
+        if (propertiesWithHistory !== undefined) {
+            requestContext.setQueryParam("propertiesWithHistory", ObjectSerializer.serialize(propertiesWithHistory, "Array<string>", ""));
+        }
+
+        // Query Params
         if (archived !== undefined) {
             requestContext.setQueryParam("archived", ObjectSerializer.serialize(archived, "boolean", ""));
         }
@@ -164,7 +169,6 @@ export class BasicApiRequestFactory extends BaseAPIRequestFactory {
         if (idProperty !== undefined) {
             requestContext.setQueryParam("idProperty", ObjectSerializer.serialize(idProperty, "string", ""));
         }
-
 
         let authMethod = null;
         // Apply auth methods
